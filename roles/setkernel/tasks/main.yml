@@ -1,0 +1,35 @@
+---
+# Task para setar o kernel-ml
+- name: Importa a chave de elrepo.org
+  rpm_key:
+    key:  https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+    state: present
+- name: Instala o repositorio elrepo
+  yum:
+    name: http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
+    state: present 
+- name: Instala o pacote kernel-ml 
+  yum: 
+    name:
+    - kernel-ml
+    enablerepo: elrepo-kernel
+    state: present
+- name: Atualiza boot order no grub
+  replace: 
+    path: /etc/default/grub
+    backup: yes
+    regexp: '^GRUB_DEFAULT=saved$' 
+    replace: 'GRUB_DEFAULT=0'
+  register: replace_result
+- name: atualiza o grub quando o boot order foi alterado
+  command: /sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
+  register: gru_bupdate_result
+  when: replace_result is changed
+- name: Reinicia o server quando o grub foi atualizado
+  shell: sleep 2 && shutdown -r now
+  async: 1
+  poll: 0
+  become: yes
+  become_method: sudo
+  ignore_errors: true
+  when: grub_update_result is changed

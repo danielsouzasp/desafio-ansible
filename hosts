@@ -1,0 +1,3 @@
+[desafio_local]
+localhost ansible_connection=local
+

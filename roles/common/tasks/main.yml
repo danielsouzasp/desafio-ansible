@@ -1,0 +1,16 @@
+---
+# Arquivo com as tasks da role common
+- name: Instala ferramentas de troublesoot htop, tcpdump, traceroute, iftop, nethogs, mtr, nmap e lynis
+  package:
+    name:
+    - htop
+    - tcpdump
+    - traceroute
+    - iftop
+    - nethogs
+    - mtr
+    - nmap
+    - lynis
+    state: present
+    update_cache: yes
+    lock_timeout: 180
