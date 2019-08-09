@@ -21,10 +21,12 @@
     regexp: '^GRUB_DEFAULT=saved$' 
     replace: 'GRUB_DEFAULT=0'
   register: replace_result
+
 - name: atualiza o grub quando o boot order foi alterado
   command: /sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
-  register: gru_bupdate_result
+  register: grub_update_result
   when: replace_result is changed
+
 - name: Reinicia o server quando o grub foi atualizado
   shell: sleep 2 && shutdown -r now
   async: 1
