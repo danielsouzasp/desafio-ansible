@@ -1,9 +1,11 @@
 # desafio-ansible
 Just an Ansible POC
 
-ansible-playbook playbook.yml --tags "default,ipv6,kernelml"
+ansible-playbook playbook.yml -e "ipv6==true,kernelml=true"
 
-tags:
-- default - instala as ferramentas de troublesooting
-- ipv6 - habilita suporte a ipv6
-- kernelml - instala o kernel-ml de elrepo.org
+- default -> instala as ferramentas de troublesooting
+EXTRA_VARS
+- ipv6=true -> habilita suporte a ipv6
+- kernelml=true -> instala o kernel-ml de elrepo.org
+
+Exemplo: ansible-playbook playbook.yml -e "ipv6==true,kernelml=true"
