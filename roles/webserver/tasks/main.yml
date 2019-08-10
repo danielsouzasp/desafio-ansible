@@ -43,10 +43,10 @@
 
 - name: Copia a index de template 
   template:
-    src: index.html
-    dest: /nginxdata/index.html
+    src: index.php
+    dest: /nginxdata/index.php
 
-- name: Desativa Selinux pra evitar erro 403 com web-root dir customizado
+- name: Desativa o maldito Selinux pra evitar erro 403 com webserver
   selinux:
     state: disabled    
 

@@ -1,4 +1,4 @@
 - hosts: desafio_local
   roles:
-#    - common
+    - common
     - webserver
