@@ -11,3 +11,5 @@ EXTRA_VARS
 Exemplo: ansible-playbook playbook.yml -e "ipv6==true,kernelml=true,webserver=true"
 
 Meu endpoint: http://35.202.70.129/index.php
+
+Nota: Saída da execução salva no arquivo log_execucao.txt
