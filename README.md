@@ -10,3 +10,5 @@ EXTRA_VARS
 - webserver=true -> instala Nginx com suporte a PHP
 
 Exemplo: ansible-playbook playbook.yml -e "ipv6==true,kernelml=true,webserver=true"
+
+Meu endpoint: http://35.202.70.129/index.php
