@@ -1,6 +1,6 @@
-# ################# desafio-ansible  #################
+# Desafio DevOps Com Ansible
 
-ansible-playbook playbook.yml
+Execução: ansible-playbook playbook.yml
 
 - default -> instala as ferramentas de troublesooting
 EXTRA_VARS
