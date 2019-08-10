@@ -1,5 +1,47 @@
 ---
+- name: Cria uma nova partição no sdb
+  parted:
+    device: /dev/sdb
+    number: 1
+    state: present
+
+- name: Configura xsf na particão /dev/sdb1
+  filesystem:
+    force: false
+    fstype: xfs
+    dev: /dev/sdb1
+
+- name: Monta a partição sdb1 como /nginxdata
+  mount:
+    path: /nginxdata
+    src: /dev/sdb1
+    fstype: xfs
+    state: present 
+
+#No Google Cloud não oi necessário instalar o rep epel-release como tive que fazer em outros ambienntes
 - name: Instalar Nginx
   package:
-    name: engix
-    state: latest
+    name: nginx
+    state: present
+
+- name: Instala php-fpm
+  package:
+    name: php-fpm
+    state: present
+
+#- name: Faz o setup do Nginx
+  
+- name: Desativa Selinux pra evitar erro 403 com web-root dir customizado
+  selinux:
+    state: disabled
+
+- name: Copia a index de template 
+  template:
+    src: index.html
+    dest: /nginxdata/index.html
+    
+
+- name: Reinicia o Nginx 
+  service:
+    name: nginx
+    state: restarted
