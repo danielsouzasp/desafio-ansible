@@ -24,22 +24,31 @@
     name: nginx
     state: present
 
-- name: Instala php-fpm
-  package:
-    name: php-fpm
-    state: present
+- name: Install php-fpm and deps
+  package: name={{ item }} state=present
+  with_items:
+    - php-fpm
+    - php-curl
+    - php-common
 
-#- name: Faz o setup do Nginx
-  
-- name: Desativa Selinux pra evitar erro 403 com web-root dir customizado
-  selinux:
-    state: disabled
+- name: Reiniciar o php-fpm
+  service: 
+    name: php-fpm
+    state: restarted
+
+- name: Copia o nginx.conf com o web-root dir customomizado
+  template:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf    
 
 - name: Copia a index de template 
   template:
     src: index.html
     dest: /nginxdata/index.html
-    
+
+- name: Desativa Selinux pra evitar erro 403 com web-root dir customizado
+  selinux:
+    state: disabled    
 
 - name: Reinicia o Nginx 
   service:
