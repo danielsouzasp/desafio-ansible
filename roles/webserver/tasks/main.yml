@@ -1,0 +1,5 @@
+---
+- name: Instalar Nginx
+  package:
+    name: engix
+    state: latest

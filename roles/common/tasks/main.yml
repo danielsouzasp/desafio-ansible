@@ -1,5 +1,4 @@
 ---
-# Arquivos de tasks da role common
 - name: Instala ferramentas de troublesoot htop, tcpdump, traceroute, iftop, nethogs, mtr, nmap e lynis
   package:
     name:
@@ -17,7 +16,7 @@
   tags:
     - default
 
-# task para setar o kernel-ml - Neste caso usei um block que vai ser executado apenas quando for passado a tag "kernelml"
+# task para setar o kernel-ml - Neste caso usei um block que vai ser executado apenas quando for passado "kernelml"
 - block:
     - name: Importa a chave de elrepo.org
       rpm_key:
@@ -33,17 +32,22 @@
         - kernel-ml
         enablerepo: elrepo-kernel
         state: present
+
     - name: Atualiza boot order no grub
       replace:
         path: /etc/default/grub
         backup: yes
         regexp: '^GRUB_DEFAULT=saved$'
         replace: 'GRUB_DEFAULT=0'
-      register: replace_result
+        #registrando o comando acima podemos usar isso para condicionar 
+        #as próximas taferas, evitar que rodem mais de uma vez
+        register: replace_result
+
     - name: atualiza o grub quando o boot order foi alterado
       command: /sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
       register: grub_update_result
       when: replace_result is changed
+
     - name: Reinicia o server quando o grub foi atualizado
       shell: sleep 2 && shutdown -r now
       async: 1
@@ -52,5 +56,14 @@
       become_method: sudo
       ignore_errors: true
       when: grub_update_result is changed
-  tags:
-    - kernelml  
+  when: kernelml | default (False)  
+
+#Task para ativar ipv6, esta parte não consegui entender exatemente o que era pra fazer
+- name: Habilitar suporte ipv6 usando sysctl 
+  sysctl:
+    name: "{{ item.name }}"
+    value: '0'
+    sysctl_set: yes
+  with_items: "{{ sysctl_settings }}"
+  when: ipv6 | default(False)
+  
