@@ -1,3 +1,0 @@
-- hosts: desafio_local
-  roles:
-    - setkernel
