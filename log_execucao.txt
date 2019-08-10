@@ -1,0 +1,69 @@
+Comando executado:
+ansible-playbook playbook.yml -e "ipv6==true,kernelml=true,webserver=true"
+
+Saída:
+PLAY [desafio_local] **********************************************************************************************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [common : Instala ferramentas de troublesoot telnet, htop, tcpdump, traceroute, iftop, nethogs, mtr, nmap e lynis] *******************************************************
+ok: [localhost]
+
+TASK [common : Importa a chave de elrepo.org] *********************************************************************************************************************************
+skipping: [localhost]
+
+TASK [common : Instala o repositorio elrepo] **********************************************************************************************************************************
+skipping: [localhost]
+
+TASK [common : Instala o pacote kernel-ml] ************************************************************************************************************************************
+skipping: [localhost]
+
+TASK [common : Atualiza boot order no grub] ***********************************************************************************************************************************
+skipping: [localhost]
+
+TASK [common : atualiza o grub quando o boot order foi alterado] **************************************************************************************************************
+skipping: [localhost]
+
+TASK [common : Reinicia o server quando o grub foi atualizado] ****************************************************************************************************************
+skipping: [localhost]
+
+TASK [common : Habilitar suporte ipv6 usando sysctl] **************************************************************************************************************************
+ok: [localhost] => (item={u'name': u'net.ipv6.conf.all.disable_ipv6'})
+ok: [localhost] => (item={u'name': u'net.ipv6.conf.default.disable_ipv6'})
+
+TASK [webserver : Cria uma nova partição no sdb] ******************************************************************************************************************************
+skipping: [localhost]
+
+TASK [webserver : Configura xsf na particão /dev/sdb1] ************************************************************************************************************************
+skipping: [localhost]
+
+TASK [webserver : Monta a partição sdb1 como /nginxdata] **********************************************************************************************************************
+skipping: [localhost]
+
+TASK [webserver : Instalar Nginx] *********************************************************************************************************************************************
+skipping: [localhost]
+
+TASK [webserver : Install php-fpm and deps] ***********************************************************************************************************************************
+skipping: [localhost] => (item=php-fpm) 
+skipping: [localhost] => (item=php-curl) 
+skipping: [localhost] => (item=php-common) 
+
+TASK [webserver : Reiniciar o php-fpm] ****************************************************************************************************************************************
+skipping: [localhost]
+
+TASK [webserver : Copia o nginx.conf com o web-root dir customomizado] ********************************************************************************************************
+skipping: [localhost]
+
+TASK [webserver : Copia a index de template] **********************************************************************************************************************************
+skipping: [localhost]
+
+TASK [webserver : Desativa o maldito Selinux pra evitar erro 403 com webserver] ***********************************************************************************************
+skipping: [localhost]
+
+TASK [webserver : Reinicia o Nginx] *******************************************************************************************************************************************
+skipping: [localhost]
+
+PLAY RECAP ********************************************************************************************************************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=16   rescued=0    ignored=0   
+

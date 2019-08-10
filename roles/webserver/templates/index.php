@@ -3,13 +3,12 @@
 <body>
 <center>
  <?php 
-  echo "<h2>#####By Daniel Souza ##### <br></h2>"; 
- 
   date_default_timezone_set('America/Sao_Paulo');
   echo "<h3>";
   echo "Data e hora: ".  date('d/m/Y - H:i');
   echo "<br>";
   echo "Rodando no diretorio: '".getcwd()."' ";
+  echo "### By Daniel Souza ### <br>";  
   echo "</h3>";
  ?>
 </center>

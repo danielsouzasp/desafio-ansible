@@ -1,56 +1,59 @@
 ---
-- name: Cria uma nova partição no sdb
-  parted:
-    device: /dev/sdb
-    number: 1
-    state: present
+#Bloco de tasks executado quando o valor de "webserver" for passado como "true" na execução da playbook
+- block:
+     - name: Cria uma nova partição no sdb
+       parted:
+         device: /dev/sdb
+         number: 1
+         state: present
 
-- name: Configura xsf na particão /dev/sdb1
-  filesystem:
-    force: false
-    fstype: xfs
-    dev: /dev/sdb1
+     - name: Configura xsf na particão /dev/sdb1
+       filesystem:
+         force: false
+         fstype: xfs
+         dev: /dev/sdb1
 
-- name: Monta a partição sdb1 como /nginxdata
-  mount:
-    path: /nginxdata
-    src: /dev/sdb1
-    fstype: xfs
-    state: present 
+     - name: Monta a partição sdb1 como /nginxdata
+       mount:
+         path: /nginxdata
+         src: /dev/sdb1
+         fstype: xfs
+         state: present 
 
-#No Google Cloud não oi necessário instalar o rep epel-release como tive que fazer em outros ambienntes
-- name: Instalar Nginx
-  package:
-    name: nginx
-    state: present
+     #No Google Cloud não oi necessário instalar o rep epel-release como tive que fazer em outros ambienntes
+     - name: Instalar Nginx
+       package:
+         name: nginx
+         state: present
+ 
+     - name: Install php-fpm and deps
+       package: name={{ item }} state=present
+       with_items:
+         - php-fpm
+         - php-curl
+         - php-common
 
-- name: Install php-fpm and deps
-  package: name={{ item }} state=present
-  with_items:
-    - php-fpm
-    - php-curl
-    - php-common
+     - name: Reiniciar o php-fpm
+       service: 
+         name: php-fpm
+         state: restarted
 
-- name: Reiniciar o php-fpm
-  service: 
-    name: php-fpm
-    state: restarted
+     - name: Copia o nginx.conf com o web-root dir customomizado
+       template:
+         src: nginx.conf
+         dest: /etc/nginx/nginx.conf    
 
-- name: Copia o nginx.conf com o web-root dir customomizado
-  template:
-    src: nginx.conf
-    dest: /etc/nginx/nginx.conf    
+     - name: Copia a index de template 
+       template:
+         src: index.php
+         dest: /nginxdata/index.php
 
-- name: Copia a index de template 
-  template:
-    src: index.php
-    dest: /nginxdata/index.php
-
-- name: Desativa o maldito Selinux pra evitar erro 403 com webserver
-  selinux:
-    state: disabled    
-
-- name: Reinicia o Nginx 
-  service:
-    name: nginx
-    state: restarted
+     - name: Desativa o maldito Selinux pra evitar erro 403 com webserver
+       selinux:
+         state: disabled    
+ 
+     - name: Reinicia o Nginx 
+       service:
+         name: nginx
+         state: restarted
+  when: webserver | default (False)  
