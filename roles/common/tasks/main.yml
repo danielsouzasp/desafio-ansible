@@ -1,3 +1,6 @@
+- name: Instala o Epel-release
+  package:
+    name: epel-release
 ---
 - name: Instala ferramentas de troublesoot telnet, htop, tcpdump, traceroute, iftop, nethogs, mtr, nmap e lynis
   package:
